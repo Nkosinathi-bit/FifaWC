@@ -1,0 +1,65 @@
+name: Check SQL Server database
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Start isolated SQL Server
+        shell: bash
+        run: |
+          db_check_password="Aa1!$(openssl rand -hex 24)"
+          echo "::add-mask::$db_check_password"
+          echo "DB_CHECK_PASSWORD=$db_check_password" >> "$GITHUB_ENV"
+          docker run -d --name fifa-sql \
+            -e ACCEPT_EULA=Y -e MSSQL_PID=Developer \
+            -e "MSSQL_SA_PASSWORD=$db_check_password" \
+            -v "$PWD:/work:ro" --workdir /work \
+            mcr.microsoft.com/mssql/server:2022-latest
+          for attempt in $(seq 1 90); do
+            if docker exec -e "SQLCMDPASSWORD=$db_check_password" fifa-sql \
+              /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -C -b -Q 'SELECT 1' >/dev/null 2>&1; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo 'SQL Server did not become ready.'
+          exit 1
+
+      - name: Create, query and validate coursework database
+        shell: bash
+        run: |
+          run_sql() {
+            docker exec -e "SQLCMDPASSWORD=$DB_CHECK_PASSWORD" fifa-sql \
+              /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -C -b "$@"
+          }
+          run_sql -i setup.sql
+          run_sql -i sql/04-transaction-cursor-demo.sql
+          run_sql -i sql/optional/security.sql
+          run_sql -i tests/verify.sql
+          if run_sql -i setup.sql > "$RUNNER_TEMP/repeated-setup.txt" 2>&1; then
+            echo 'Setup unexpectedly accepted an existing database.'
+            exit 1
+          fi
+          grep -F 'already exists' "$RUNNER_TEMP/repeated-setup.txt"
+          run_sql -i tests/verify.sql
+          run_sql -w 120 -W -i tests/query-preview.sql > "$RUNNER_TEMP/query-output.txt"
+          python - <<'PY'
+          import base64, os
+          from pathlib import Path
+          output = Path(os.environ['RUNNER_TEMP']) / 'query-output.txt'
+          print('PORTFOLIO_TEXT FifaWC ' + base64.b64encode(output.read_bytes()).decode())
+          PY
+
+      - name: Stop isolated SQL Server
+        if: always()
+        run: docker rm -f fifa-sql
