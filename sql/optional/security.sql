@@ -1,4 +1,6 @@
 -- Database-scoped, non-login demonstration. No server account or password is created.
+:On Error exit
+:r sql/00-session-options.sql
 USE FIFA2026;
 GO
 IF DATABASE_PRINCIPAL_ID(N'FIFAReaderRole') IS NULL CREATE ROLE FIFAReaderRole;

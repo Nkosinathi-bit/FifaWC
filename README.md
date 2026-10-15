@@ -51,6 +51,7 @@ The seed contains **15 countries, 13 cities, 13 stadiums, 12 teams, 22 players, 
 | Path | Purpose |
 | --- | --- |
 | `setup.sql` | Non-destructive entry point for a new database |
+| `sql/00-session-options.sql` | Session settings required by indexed computed team-pair columns |
 | `sql/01-schema.sql` | Tables, relationships, indexes, view, procedure, function and trigger |
 | `sql/02-seed.sql` | Fictional coursework data |
 | `sql/03-queries.sql` | Reporting and SQL query examples |

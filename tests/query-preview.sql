@@ -1,3 +1,5 @@
+:On Error exit
+:r sql/00-session-options.sql
 USE FIFA2026;
 GO
 SET NOCOUNT ON;

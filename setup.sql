@@ -10,6 +10,7 @@ CREATE DATABASE FIFA2026;
 GO
 USE FIFA2026;
 GO
+:r sql/00-session-options.sql
 :r sql/01-schema.sql
 :r sql/02-seed.sql
 :r sql/03-queries.sql
