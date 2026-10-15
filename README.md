@@ -8,6 +8,14 @@ A relational database coursework project modelling countries, cities, stadiums, 
 
 The fixtures, scores, player selections and six-group structure are **fictional coursework examples**, not official FIFA 2026 tournament data. This repository contains SQL and documentation; it has no web application.
 
+## Query results preview
+
+These rows were returned by the maintained SQL scripts running on SQL Server. The image presents the recorded results as a readable table; the project has no graphical application.
+
+![Recorded SQL Server query results](docs/screenshots/query-results.png)
+
+[Full unedited SQLCMD output](docs/screenshots/query-output.txt) · [Capture provenance](docs/screenshots/capture.json)
+
 ## What the project demonstrates
 
 - Seven related tables with primary keys, foreign keys, required fields and supporting indexes.

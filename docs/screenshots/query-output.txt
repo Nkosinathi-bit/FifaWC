@@ -1,0 +1,23 @@
+Changed database context to 'FIFA2026'.
+FIFA WORLD CUP DATABASE / COURSEWORK SAMPLE
+Fictional fixtures and scores - not official tournament results.
+ 
+HomeTeam AwayTeam MatchDate Score
+-------- -------- --------- -----
+Brazil Germany 2026-06-10 0 - 0
+France Argentina 2026-06-12 2 - 1
+Spain England 2026-06-13 0 - 0
+Portugal Germany 2026-06-14 3 - 2
+Brazil Spain 2026-06-15 1 - 1
+England Portugal 2026-06-16 4 - 2
+Netherlands Italy 2026-06-17 2 - 2
+Belgium Uruguay 2026-06-18 1 - 0
+Uruguay Croatia 2026-06-19 3 - 1
+France Netherlands 2026-06-20 0 - 2
+Argentina Italy 2026-06-21 1 - 3
+ 
+Corrected country mapping
+Team Country
+---- -------
+Brazil Brazil
+Germany Germany
